@@ -56,18 +56,19 @@ export default class CommandHandler {
 
         // Try and figure out what command the user ran, defaulting to help
         try {
-            if (args[0] === "hello") {
-                return runHelloCommand(roomId, event, args, this.client);
-            } else {
-                const help = "" +
-                    "!bot hello [user]     - Say hello to a user.\n" +
-                    "!bot help             - This menu\n";
+            switch (args[0]) {
+                case "hello": { return runHelloCommand(roomId, event, args, this.client); }
+                default: {
+                    const help = "" +
+                        "!bot hello [user]     - Say hello to a user.\n" +
+                        "!bot help             - This menu\n";
 
-                const text = `Help menu:\n${help}`;
-                const html = `<b>Help menu:</b><br /><pre><code>${htmlEscape(help)}</code></pre>`;
-                const reply = RichReply.createFor(roomId, ev, text, html); // Note that we're using the raw event, not the parsed one!
-                reply["msgtype"] = "m.notice"; // Bots should always use notices
-                return this.client.sendMessage(roomId, reply);
+                    const text = `Help menu:\n${help}`;
+                    const html = `<b>Help menu:</b><br /><pre><code>${htmlEscape(help)}</code></pre>`;
+                    const reply = RichReply.createFor(roomId, ev, text, html); // Note that we're using the raw event, not the parsed one!
+                    reply["msgtype"] = "m.notice"; // Bots should always use notices
+                    return this.client.sendMessage(roomId, reply);
+                }
             }
         } catch (e) {
             // Log the error
